@@ -50,7 +50,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// </summary>
         private DepthFrameReader depthFrameReader = null;
 
-        /// <summary>
+        /// <summary>iuhiuh
         /// Description of the data contained in the depth frame
         /// </summary>
         private FrameDescription depthFrameDescription = null;
