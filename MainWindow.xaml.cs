@@ -294,7 +294,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             
             if (cursol_locked)
             {
-                mouseInPicture = mouse;
+                mouseInPicture = (bool)(this.CheckLockCenter.IsChecked) ? mouse : getLockPosition();
                 if ((bool)(this.CheckWriteDown.IsChecked))
                 {
                     writeToText(ProcessData, mouseInPicture);
@@ -366,6 +366,31 @@ namespace Microsoft.Samples.Kinect.DepthBasics
            
             writingSw.Write(ValueTemp.ToString() + "\r\n");
             writeDownedCounter++;
+        }
+
+        private getPointLocation getLockPosition()
+        {
+            double temp;
+            getPointLocation LockPosition = new getPointLocation();
+            if (double.TryParse(this.textXlock.Text, out temp))
+            {
+                LockPosition.X = temp;
+            }
+            else
+            {
+                return mouse;
+            }
+
+            if (double.TryParse(this.textYlock.Text, out temp))
+            {
+                LockPosition.Y = temp;
+            }
+            else
+            {
+                return mouse;
+            }
+            return LockPosition;
+            
         }
     }
 }

@@ -20,6 +20,10 @@
         <CheckBox Content="WriteDown" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="613,20,0,0" VerticalAlignment="Top" Width="130" Name="CheckWriteDown"/>
         
         <CheckBox Content="LockCenter" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="336,20,0,0" VerticalAlignment="Top" Width="194" Name="CheckLockCenter"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="437,61,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="93" Name="textXlock"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="437,110,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="93" Name="textYlock"/>
+        <Label Content="X" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="336,61,0,0" VerticalAlignment="Top" Width="81"/>
+        <Label Content="Y" Grid.Column="1" HorizontalAlignment="Left" Height="35" Margin="336,110,0,0" VerticalAlignment="Top" Width="81"/>
 
 
 
