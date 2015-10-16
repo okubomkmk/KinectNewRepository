@@ -21,7 +21,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
     using System.Collections.Generic;
     
     /// check updated
-    /// <summary>
+    /// <summary> efefefefef
     /// Interaction logic for MainWindow
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
