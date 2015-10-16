@@ -115,7 +115,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.CheckWriteDown.IsEnabled = false;
-            writingSw.Write("\nopened " + dtnow.ToString() + "\n");
+            writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n");
             
         }
 
@@ -179,7 +179,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 this.kinectSensor.Close();
                 this.kinectSensor = null;
             }
-            writingSw.Write("\n"+dtnow.ToString() + " closed\n");
+            writingSw.Write("\r\n"+dtnow.ToString() + " closed\r\n");
             writingSw.Close();
         }
 
@@ -360,11 +360,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             if (!TimeStampFrag)
             {
                 DateTime dtnow = DateTime.Now;
-                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\n");
+                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n");
             }
             TimeStampFrag = true;
            
-            writingSw.Write(ValueTemp.ToString() + ",");
+            writingSw.Write(ValueTemp.ToString() + "\r\n");
             writeDownedCounter++;
         }
     }
