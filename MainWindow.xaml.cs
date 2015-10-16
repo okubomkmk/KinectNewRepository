@@ -21,7 +21,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
     using System.Collections.Generic;
     
     /// check updated
-    /// <summary> efefefefef test by letsnote
+    /// <summary> 
     /// Interaction logic for MainWindow
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
@@ -40,6 +40,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private bool TimeStampFrag = false;
         /// <summary>
         /// Active Kinect sensor
         /// </summary>
@@ -298,6 +299,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 {
                     writeToText(ProcessData, mouseInPicture);
                 }
+
+                else
+                {
+                    TimeStampFrag = false;
+                }
                 CursorLocation = " Cursor Location " + (mouseInPicture.X.ToString() + " " + mouseInPicture.Y.ToString());
                 Value = shiburinkawaiiyoo(ProcessData, mouseInPicture);
                   
@@ -351,6 +357,13 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private unsafe void writeToText(ushort* ProcessData, getPointLocation location)
         {
             ushort ValueTemp = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
+            if (!TimeStampFrag)
+            {
+                DateTime dtnow = DateTime.Now;
+                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\n");
+            }
+            TimeStampFrag = true;
+           
             writingSw.Write(ValueTemp.ToString() + ",");
             writeDownedCounter++;
         }

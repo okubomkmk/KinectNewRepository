@@ -17,20 +17,9 @@
         <StatusBar HorizontalAlignment="Left" Height="25" Margin="20,470,0,0" VerticalAlignment="Top" Width="805" Grid.ColumnSpan="2">
             <StatusBarItem Content="{Binding StatusText}" Width="805"/>
         </StatusBar>
-
-
-        <chartingToolkit:Chart HorizontalAlignment="Left" Height="380" Margin="275,20,0,0" VerticalAlignment="Top" Width="546" Grid.Column="1" >
-            <chartingToolkit:LineSeries Name="DepthChart" Margin="0,0,-3,0" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" >
-
-            </chartingToolkit:LineSeries>
-
-            <chartingToolkit:Chart.Axes>
-                <chartingToolkit:LinearAxis Orientation="Y" Minimum="0" Maximum="9000"/>
-            </chartingToolkit:Chart.Axes>
-        </chartingToolkit:Chart>
-        <CheckBox Content="WriteDown" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="470,449,0,0" VerticalAlignment="Top" Width="130" Name="CheckWriteDown"/>
+        <CheckBox Content="WriteDown" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="613,20,0,0" VerticalAlignment="Top" Width="130" Name="CheckWriteDown"/>
         
-        <CheckBox Content="LockCenter" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="336,449,0,0" VerticalAlignment="Top" Width="194" Name="CheckLockCenter"/>
+        <CheckBox Content="LockCenter" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="336,20,0,0" VerticalAlignment="Top" Width="194" Name="CheckLockCenter"/>
 
 
 
