@@ -295,7 +295,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             
             if (cursol_locked)
             {
-                mouseInPicture = (bool)(this.CheckLockCenter.IsChecked) ? mouse : getLockPosition();
+                mouseInPicture = (bool)(this.CheckLockCenter.IsChecked) ? getLockPosition() : mouse;
                 if ((bool)(this.CheckWriteDown.IsChecked))
                 {
                     
@@ -391,7 +391,14 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 return mouse;
             }
-            return LockPosition;
+            if((0 <= LockPosition.X && LockPosition.X < this.depthFrameDescription.Width) && (0 <= LockPosition.Y && LockPosition.Y < this.depthFrameDescription.Height))
+            {
+                return LockPosition;
+            }
+            else
+            {
+                return mouse;
+            }
             
         }
 
