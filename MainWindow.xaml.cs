@@ -39,7 +39,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private DateTime dtnow;
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         /// <summary>
         /// Active Kinect sensor
@@ -115,6 +115,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.CheckWriteDown.IsEnabled = false;
+            this.CheckRecordMultipulPoints.IsEnabled = false;
             writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n");
             
         }
@@ -297,6 +298,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 mouseInPicture = (bool)(this.CheckLockCenter.IsChecked) ? mouse : getLockPosition();
                 if ((bool)(this.CheckWriteDown.IsChecked))
                 {
+                    
                     writeToText(ProcessData, mouseInPicture);
                 }
 
@@ -392,5 +394,20 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             return LockPosition;
             
         }
+
+        private void CheckLockCenter_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckRecordMultipulPoints.IsEnabled = true;
+            cursol_locked = true;
+        }
+
+        private void CheckLockCenter_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckRecordMultipulPoints.IsEnabled = false;
+            cursol_locked = false;
+        }
+
+
+
     }
 }
