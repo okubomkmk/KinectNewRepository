@@ -24,6 +24,7 @@
         <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="437,110,0,0" TextWrapping="Wrap" Text="212" VerticalAlignment="Top" Width="93" Name="textYlock"/>
         <Label Content="X" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="336,61,0,0" VerticalAlignment="Top" Width="81"/>
         <Label Content="Y" Grid.Column="1" HorizontalAlignment="Left" Height="35" Margin="336,110,0,0" VerticalAlignment="Top" Width="81"/>
+        <CheckBox Content="NoneTimestamp" Grid.Column="1" HorizontalAlignment="Left" Height="31" Margin="591,75,0,0" VerticalAlignment="Top" Width="138" Name="CheckNoneTimestamp" IsChecked="False" Checked="CheckNoneTimestamp_Checked" Unchecked="CheckNoneTimestamp_Unchecked"/>
 
 
 

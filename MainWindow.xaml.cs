@@ -41,6 +41,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
+        private bool TimeStampWriteFlag = true;
         /// <summary>
         /// Active Kinect sensor
         /// </summary>
@@ -115,6 +116,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.CheckWriteDown.IsEnabled = false;
+            if()
             writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n");
             
         }
@@ -357,7 +359,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private unsafe void writeToText(ushort* ProcessData, getPointLocation location)
         {
             ushort ValueTemp = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
-            if (!TimeStampFrag)
+            if (!TimeStampFrag && TimeStampWriteFlag)
             {
                 DateTime dtnow = DateTime.Now;
                 writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n");
@@ -399,5 +401,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             }
             
         }
+
+        private void CheckNoneTimestamp_Checked(object sender, RoutedEventArgs e)
+        {
+            TimeStampWriteFlag = false;
+        }
+
+        private void CheckNoneTimestamp_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TimeStampWriteFlag = true;
+        }
+
     }
 }
