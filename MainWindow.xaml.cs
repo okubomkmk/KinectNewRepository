@@ -36,11 +36,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private int fps_graph = 1;
         private bool cursol_locked = true;
         private Point p = new Point();
-        private DateTime dtnow;
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
+        private bool TimeStampWriteFlag = true;
         /// <summary>
         /// Active Kinect sensor
         /// </summary>
@@ -115,7 +115,6 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.CheckWriteDown.IsEnabled = false;
-            //writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n"); //input time stamp
             
         }
 
@@ -180,8 +179,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 this.kinectSensor = null;
             }
 
-            DateTime dtend = new DateTime();
-            // writingSw.Write("\r\n"+dtendnow.ToString() + " closed\r\n"); //write time stamp
+            DateTime dtend = DateTime.Now;
+            if (TimeStampWriteFlag)
+            {
+                writingSw.Write("\r\n" + dtend.ToString() + " closed\r\n"); //write time stamp
+            }
             writingSw.Close();
         }
 
@@ -359,10 +361,10 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private unsafe void writeToText(ushort* ProcessData, getPointLocation location)
         {
             ushort ValueTemp = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
-            if (!TimeStampFrag)
+            if (!TimeStampFrag && TimeStampWriteFlag)
             {
                 DateTime dtnow = DateTime.Now;
-                //writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
+                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
            
@@ -400,6 +402,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 return mouse;
             }
             
+        }
+
+        private void CheckNonTimeStamp_Checked(object sender, RoutedEventArgs e)
+        {
+            TimeStampWriteFlag = false;
+        }
+
+        private void CheckNonTimeStamp_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TimeStampWriteFlag = true;
         }
     }
 }
