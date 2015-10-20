@@ -39,7 +39,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private DateTime dtnow;
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         /// <summary>
         /// Active Kinect sensor
@@ -115,7 +115,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.CheckWriteDown.IsEnabled = false;
-            writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n");
+            //writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n"); //input time stamp
             
         }
 
@@ -179,7 +179,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 this.kinectSensor.Close();
                 this.kinectSensor = null;
             }
-            writingSw.Write("\r\n"+dtnow.ToString() + " closed\r\n");
+
+            DateTime dtend = new DateTime();
+            // writingSw.Write("\r\n"+dtendnow.ToString() + " closed\r\n"); //write time stamp
             writingSw.Close();
         }
 
@@ -360,7 +362,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             if (!TimeStampFrag)
             {
                 DateTime dtnow = DateTime.Now;
-                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n");
+                //writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
            
