@@ -41,6 +41,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool TimeStampWriteFlag = true;
+        private ushort[] fukuisan = new ushort[1];
         /// <summary>
         /// Active Kinect sensor
         /// </summary>
@@ -413,5 +414,20 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         {
             TimeStampWriteFlag = true;
         }
+
+        private void TextSample_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            double temp;
+            if (double.TryParse(this.TextSample.Text, out temp))
+            {
+                Array.Resize(ref fukuisan, (ushort)temp); 
+               
+            }
+            else
+            {
+                Array.Resize(ref fukuisan, (ushort)16384); 
+            }
+        }
+
     }
 }
