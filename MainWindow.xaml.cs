@@ -19,7 +19,6 @@ namespace Microsoft.Samples.Kinect.DepthBasics
     using Microsoft.Kinect;
     using System.Collections.ObjectModel;
     using System.Collections.Generic;
-    
     /// check updated
     /// <summary> 
     /// Interaction logic for MainWindow
@@ -30,7 +29,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-
+        private int RECORD_SIZE = 10;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -41,6 +40,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool TimeStampWriteFlag = true;
+        private bool WritingFlag = false;
+        private int WaitForStartingRecord = 2;
         private ushort[] fukuisan = new ushort[1];
         /// <summary>
         /// Active Kinect sensor
@@ -115,7 +116,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
             // initialize the components (controls) of the window
             this.InitializeComponent();
-            this.CheckWriteDown.IsEnabled = false;
+            this.ButtonWriteDown.IsEnabled = false;
+            Array.Resize(ref fukuisan,RECORD_SIZE);
             
         }
 
@@ -300,9 +302,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             if (cursol_locked)
             {
                 mouseInPicture = (bool)(this.CheckLockCenter.IsChecked) ? getLockPosition() : mouse;
-                if ((bool)(this.CheckWriteDown.IsChecked))
+                if (WritingFlag)
                 {
-                    writeToText(ProcessData, mouseInPicture);
+                    writeToArray(ProcessData, mouseInPicture);
                 }
 
                 else
@@ -356,23 +358,36 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
             cursol_locked = !cursol_locked;
 
-            this.CheckWriteDown.IsEnabled = cursol_locked;
+            this.ButtonWriteDown.IsEnabled = cursol_locked;
         }
 
-        private unsafe void writeToText(ushort* ProcessData, getPointLocation location)
+        private unsafe void writeToArray(ushort* ProcessData, getPointLocation location)
         {
-            ushort ValueTemp = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
+            
             if (!TimeStampFrag && TimeStampWriteFlag)
             {
                 DateTime dtnow = DateTime.Now;
                 writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
-           
-            writingSw.Write(ValueTemp.ToString() + "\r\n");
+            fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
+            //writingSw.Write(ValueTemp.ToString() + "\r\n");
             writeDownedCounter++;
+            if (writeDownedCounter == fukuisan.Length)
+            {
+                WritingFlag = false;
+                writeToText();
+                ButtonWriteDown.IsEnabled = true;
+            }
         }
 
+        private void writeToText()
+        {
+            for (int i = 0; i < fukuisan.Length; i++)
+            {
+                writingSw.Write(fukuisan[i] + "\r\n");
+            }
+        }
         private getPointLocation getLockPosition()
         {
             double temp;
@@ -415,18 +430,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             TimeStampWriteFlag = true;
         }
 
-        private void TextSample_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void ButtonWriteDown_Click(object sender, RoutedEventArgs e)
         {
-            double temp;
-            if (double.TryParse(this.TextSample.Text, out temp))
+            for (int i = 0; i <= WaitForStartingRecord; i++)
             {
-                Array.Resize(ref fukuisan, (ushort)temp); 
-               
+                this.ButtonWriteDown.Content = (WaitForStartingRecord - i).ToString();
+                System.Threading.Thread.Sleep(500);
             }
-            else
-            {
-                Array.Resize(ref fukuisan, (ushort)16384); 
-            }
+                WritingFlag = true;
+            writeDownedCounter = 0;
+            ButtonWriteDown.IsEnabled = false;
         }
 
     }
