@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 65536;
+        private int RECORD_SIZE = 512;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -46,6 +46,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private bool NinePointFlag = false;
         private int WaitForStartingRecord = 3;
         private ushort[] fukuisan = new ushort[1];
+        private int distance_fukuisan_horizonal = 1;
+        private int distance_fukuisan_vertial = 1;
 
         /// <summary>
         /// Active Kinect sensor
@@ -121,7 +123,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.ButtonWriteDown.IsEnabled = false;
-            Array.Resize(ref fukuisan,RECORD_SIZE);
+            Array.Resize(ref fukuisan,RECORD_SIZE * 9);
             
         }
 
@@ -340,7 +342,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 }
             }
 
-            this.StatusText = Resolution + CursorLocation + " cursor lock is " + cursol_locked.ToString() + " " + Value.ToString() + " Writing is " +CheckWriteDown.IsChecked.ToString() + " Writed sample number =" + writeDownedCounter.ToString();
+            this.StatusText = Resolution + CursorLocation + " cursor lock is " + cursol_locked.ToString() + " " + Value.ToString() + " Writing is "  + " Writed sample number =" + writeDownedCounter.ToString();
         }
         
         private unsafe ushort shiburinkawaiiyoo(ushort* ProcessData, double X,double Y)
@@ -376,10 +378,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
-            fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
-            //writingSw.Write(ValueTemp.ToString() + "\r\n");
-            writeDownedCounter++;
-            if (writeDownedCounter == fukuisan.Length)
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + i * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
+                }
+            }
+                //writingSw.Write(ValueTemp.ToString() + "\r\n");
+                writeDownedCounter++;
+            if (writeDownedCounter == fukuisan.Length / 9)
             {
                 WritingFlag = false;
                 writeToText();
