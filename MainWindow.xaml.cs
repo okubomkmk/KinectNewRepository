@@ -19,6 +19,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
     using Microsoft.Kinect;
     using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using System.Threading;
+    using System.Windows.Threading;
     /// check updated
     /// <summary> 
     /// Interaction logic for MainWindow
@@ -29,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 10;
+        private int RECORD_SIZE = 65536;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -41,8 +43,10 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private bool TimeStampFrag = false;
         private bool TimeStampWriteFlag = true;
         private bool WritingFlag = false;
-        private int WaitForStartingRecord = 2;
+        private bool NinePointFlag = false;
+        private int WaitForStartingRecord = 3;
         private ushort[] fukuisan = new ushort[1];
+
         /// <summary>
         /// Active Kinect sensor
         /// </summary>
@@ -306,6 +310,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 {
                     writeToArray(ProcessData, mouseInPicture);
                 }
+                    
+
 
                 else
                 {
@@ -387,6 +393,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 writingSw.Write(fukuisan[i] + "\r\n");
             }
+            if (TimeStampWriteFlag)
+            {
+                DateTime dtnow = DateTime.Now;
+                writingSw.Write(dtnow.ToString() + "redord ended\r\n");
+            }
         }
         private getPointLocation getLockPosition()
         {
@@ -432,14 +443,29 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
         private void ButtonWriteDown_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i <= WaitForStartingRecord; i++)
-            {
-                this.ButtonWriteDown.Content = (WaitForStartingRecord - i).ToString();
-                System.Threading.Thread.Sleep(500);
-            }
-                WritingFlag = true;
+            DispatcherTimer  ButtonEditorTimer = new DispatcherTimer(DispatcherPriority.Normal);
+            ButtonEditorTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
+            ButtonEditorTimer.Tick += new EventHandler(ButtonEdit);
+            ButtonEditorTimer.Start();
             writeDownedCounter = 0;
             ButtonWriteDown.IsEnabled = false;
+            
+        }
+
+        private void ButtonEdit(object sender, EventArgs e)
+        {
+            
+            this.ButtonWriteDown.Content = (WaitForStartingRecord).ToString();
+            WaitForStartingRecord--;
+            if (WaitForStartingRecord == -1)
+            {
+                WritingFlag = true;
+            }
+        }
+
+        private void CheckNinePoints_Checked(object sender, RoutedEventArgs e)
+        {
+            NinePointFlag = true;
         }
 
     }
