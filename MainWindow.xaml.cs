@@ -40,12 +40,14 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool TimeStampWriteFlag = true;
         private bool WritingFlag = false;
         private bool NinePointFlag = false;
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
+        private ushort[] old_fukuisan = new ushort[1];
         private int distance_fukuisan_horizonal = 1;
         private int distance_fukuisan_vertial = 1;
 
@@ -124,6 +126,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             this.InitializeComponent();
             this.ButtonWriteDown.IsEnabled = false;
             Array.Resize(ref fukuisan,RECORD_SIZE * 9);
+            Array.Resize(ref old_fukuisan, RECORD_SIZE);
             
         }
 
@@ -192,6 +195,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             if (TimeStampWriteFlag)
             {
                 writingSw.Write("\r\n" + dtend.ToString() + " closed\r\n"); //write time stamp
+                writingCenter.Write("\r\n" + dtend.ToString() + " closed\r\n");
             }
             writingSw.Close();
         }
@@ -376,6 +380,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 DateTime dtnow = DateTime.Now;
                 writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
+                writingCenter.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
             for (int i = 0; i < 3; i++)
@@ -405,6 +410,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 DateTime dtnow = DateTime.Now;
                 writingSw.Write(dtnow.ToString() + "redord ended\r\n");
+                writingCenter.Write(dtnow.ToString() + "redord ended\r\n");
             }
         }
         private getPointLocation getLockPosition()
