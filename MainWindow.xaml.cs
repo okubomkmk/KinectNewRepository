@@ -48,8 +48,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
-        private int distance_fukuisan_horizonal = 1;
-        private int distance_fukuisan_vertial = 1;
+        private int distance_fukuisan_horizonal = 128;
+        private int distance_fukuisan_vertial = 104;
 
         /// <summary>
         /// Active Kinect sensor
@@ -376,7 +376,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
         private unsafe void writeToArray(ushort* ProcessData, getPointLocation location)
         {
-            
+            int index_value = 0;
             if (!TimeStampFrag && TimeStampWriteFlag)
             {
                 DateTime dtnow = DateTime.Now;
@@ -388,12 +388,13 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    fukuisan[i * 3 + j + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + i * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
+                    index_value = i * 3 + j;
+                    fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
                 }
             }
             old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
 
-                writeDownedCounter++;
+            writeDownedCounter++;
             if (writeDownedCounter == fukuisan.Length / 9)
             {
                 WritingFlag = false;
