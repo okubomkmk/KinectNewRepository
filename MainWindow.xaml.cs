@@ -48,8 +48,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
-        private int distance_fukuisan_horizonal = 128;
-        private int distance_fukuisan_vertial = 104;
+        private int distance_fukuisan_horizonal = 1;
+        private int distance_fukuisan_vertial = 1;
 
         /// <summary>
         /// Active Kinect sensor
