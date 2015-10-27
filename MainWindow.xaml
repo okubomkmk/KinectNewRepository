@@ -14,8 +14,8 @@
         <Viewbox HorizontalAlignment="Left" Height="424" Margin="20,20,0,0" VerticalAlignment="Top" Width="512" x:Name="Viewbox1" MouseLeftButtonDown="Viewbox1_MouseLeftButtonDown" Grid.ColumnSpan="2">
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill"/>
         </Viewbox>
-        <StatusBar HorizontalAlignment="Left" Height="25" Margin="20,470,0,0" VerticalAlignment="Top" Width="805" Grid.ColumnSpan="2">
-            <StatusBarItem Content="{Binding StatusText}" Width="805"/>
+        <StatusBar HorizontalAlignment="Left" Height="25" Margin="20,470,0,0" VerticalAlignment="Top" Width="605" Grid.ColumnSpan="2">
+            <StatusBarItem Content="{Binding StatusText}" Width="505"/>
         </StatusBar>
         <CheckBox Content="NinePoints" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="613,20,0,0" VerticalAlignment="Top" Width="130" Name="CheckNinePoints" Checked="CheckNinePoints_Checked"/>
 
@@ -27,6 +27,15 @@
         <CheckBox Content="NonTimeStamp" Grid.Column="1" HorizontalAlignment="Left" Height="57" Margin="613,61,0,0" VerticalAlignment="Top" Width="130" Name="CheckNonTimeStamp" IsChecked="False" Checked="CheckNonTimeStamp_Checked" Unchecked="CheckNonTimeStamp_Unchecked"/>
         <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="437,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" Name="TextSample" Text="16384"/>
         <Label Content="Sample" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="336,162,0,0"/>
-        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="296" Grid.Column="1" Margin="535,110,0,0" Height="248" Name="ButtonWriteDown" Click="ButtonWriteDown_Click" FontSize="100" />
+        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="296" Grid.Column="1" Margin="535,100,0,0" Height="71" Name="ButtonWriteDown" Click="ButtonWriteDown_Click" FontSize="50" />
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="390,308,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="513,308,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="636,308,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="390,375,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="513,375,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="636,375,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="390,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="513,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="636,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
     </Grid>
 </Window>
