@@ -412,6 +412,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 writingSw.Write(dtnow.ToString() + "redord ended\r\n");
                 writingCenter.Write(dtnow.ToString() + "redord ended\r\n");
             }
+
         }
         private getPointLocation getLockPosition()
         {
