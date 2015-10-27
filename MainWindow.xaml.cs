@@ -19,7 +19,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
     using Microsoft.Kinect;
     using System.Collections.ObjectModel;
     using System.Collections.Generic;
-    
+    using System.Threading;
+    using System.Windows.Threading;
     /// check updated
     /// <summary> 
     /// Interaction logic for MainWindow
@@ -30,18 +31,26 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-
+        private int RECORD_SIZE = 1024;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
         private bool cursol_locked = true;
         private Point p = new Point();
-        private DateTime dtnow;
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.txt", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool TimeStampWriteFlag = true;
+        private bool WritingFlag = false;
+        private bool NinePointFlag = false;
+        private int WaitForStartingRecord = 1;
+        private ushort[] fukuisan = new ushort[1];
+        private ushort[] old_fukuisan = new ushort[1];
+        private int distance_fukuisan_horizonal = 128;
+        private int distance_fukuisan_vertial = 104;
+
         /// <summary>
         /// Active Kinect sensor
         /// </summary>
@@ -115,9 +124,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
             // initialize the components (controls) of the window
             this.InitializeComponent();
-            this.CheckWriteDown.IsEnabled = false;
-            if()
-            writingSw.Write("\r\nopened " + dtnow.ToString() + "\r\n");
+            this.ButtonWriteDown.IsEnabled = false;
+            Array.Resize(ref fukuisan,RECORD_SIZE * 9);
+            Array.Resize(ref old_fukuisan, RECORD_SIZE);
             
         }
 
@@ -181,8 +190,15 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 this.kinectSensor.Close();
                 this.kinectSensor = null;
             }
-            writingSw.Write("\r\n"+dtnow.ToString() + " closed\r\n");
+
+            DateTime dtend = DateTime.Now;
+            if (TimeStampWriteFlag)
+            {
+                writingSw.Write("\r\n" + dtend.ToString() + " closed\r\n"); //write time stamp
+                writingCenter.Write("\r\n" + dtend.ToString() + " closed\r\n");
+            }
             writingSw.Close();
+            writingCenter.Close();
         }
 
         /// <summary>
@@ -297,10 +313,12 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             if (cursol_locked)
             {
                 mouseInPicture = (bool)(this.CheckLockCenter.IsChecked) ? getLockPosition() : mouse;
-                if ((bool)(this.CheckWriteDown.IsChecked))
+                if (WritingFlag)
                 {
-                    writeToText(ProcessData, mouseInPicture);
+                    writeToArray(ProcessData, mouseInPicture);
                 }
+                    
+
 
                 else
                 {
@@ -329,7 +347,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 }
             }
 
-            this.StatusText = Resolution + CursorLocation + " cursor lock is " + cursol_locked.ToString() + " " + Value.ToString() + " Writing is " +CheckWriteDown.IsChecked.ToString() + " Writed sample number =" + writeDownedCounter.ToString();
+            this.StatusText = Resolution + CursorLocation + " cursor lock is " + cursol_locked.ToString() + " " + Value.ToString() + " Writing is "  + " Writed sample number =" + writeDownedCounter.ToString();
         }
         
         private unsafe ushort shiburinkawaiiyoo(ushort* ProcessData, double X,double Y)
@@ -353,23 +371,57 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
             cursol_locked = !cursol_locked;
 
-            this.CheckWriteDown.IsEnabled = cursol_locked;
+            this.ButtonWriteDown.IsEnabled = cursol_locked;
         }
 
-        private unsafe void writeToText(ushort* ProcessData, getPointLocation location)
+        private unsafe void writeToArray(ushort* ProcessData, getPointLocation location)
         {
-            ushort ValueTemp = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
+            int index_value = 0;
             if (!TimeStampFrag && TimeStampWriteFlag)
             {
                 DateTime dtnow = DateTime.Now;
-                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n");
+                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
+                writingCenter.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
-           
-            writingSw.Write(ValueTemp.ToString() + "\r\n");
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    index_value = i * 3 + j;
+                    fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
+                }
+            }
+            old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
+
             writeDownedCounter++;
+            if (writeDownedCounter == fukuisan.Length / 9)
+            {
+                WritingFlag = false;
+                writeToText();
+                ButtonWriteDown.IsEnabled = true;
+            }
         }
 
+        private void writeToText()
+        {
+            for (int i = 0; i < fukuisan.Length; i++)
+            {
+                writingSw.Write(fukuisan[i] + "\r\n");
+            }
+            for (int j = 0; j < old_fukuisan.Length; j++ )
+            {
+                writingCenter.Write(old_fukuisan[j].ToString() + "\r\n");
+            }
+            
+            if (TimeStampWriteFlag)
+            {
+                DateTime dtnow = DateTime.Now;
+                writingSw.Write(dtnow.ToString() + "redord ended\r\n");
+                writingCenter.Write(dtnow.ToString() + "redord ended\r\n");
+            }
+
+        }
         private getPointLocation getLockPosition()
         {
             double temp;
@@ -402,14 +454,41 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             
         }
 
-        private void CheckNoneTimestamp_Checked(object sender, RoutedEventArgs e)
+        private void CheckNonTimeStamp_Checked(object sender, RoutedEventArgs e)
         {
             TimeStampWriteFlag = false;
         }
 
-        private void CheckNoneTimestamp_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckNonTimeStamp_Unchecked(object sender, RoutedEventArgs e)
         {
             TimeStampWriteFlag = true;
+        }
+
+        private void ButtonWriteDown_Click(object sender, RoutedEventArgs e)
+        {
+            DispatcherTimer  ButtonEditorTimer = new DispatcherTimer(DispatcherPriority.Normal);
+            ButtonEditorTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
+            ButtonEditorTimer.Tick += new EventHandler(ButtonEdit);
+            ButtonEditorTimer.Start();
+            writeDownedCounter = 0;
+            ButtonWriteDown.IsEnabled = false;
+            
+        }
+
+        private void ButtonEdit(object sender, EventArgs e)
+        {
+            
+            this.ButtonWriteDown.Content = (WaitForStartingRecord).ToString();
+            WaitForStartingRecord--;
+            if (WaitForStartingRecord == -1)
+            {
+                WritingFlag = true;
+            }
+        }
+
+        private void CheckNinePoints_Checked(object sender, RoutedEventArgs e)
+        {
+            NinePointFlag = true;
         }
 
     }
