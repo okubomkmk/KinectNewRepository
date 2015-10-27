@@ -198,6 +198,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 writingCenter.Write("\r\n" + dtend.ToString() + " closed\r\n");
             }
             writingSw.Close();
+            writingCenter.Close();
         }
 
         /// <summary>
@@ -390,7 +391,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                     fukuisan[i * 3 + j + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + i * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
                 }
             }
-                //writingSw.Write(ValueTemp.ToString() + "\r\n");
+            old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
+
                 writeDownedCounter++;
             if (writeDownedCounter == fukuisan.Length / 9)
             {
@@ -406,6 +408,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 writingSw.Write(fukuisan[i] + "\r\n");
             }
+            for (int j = 0; j < old_fukuisan.Length; j++ )
+            {
+                writingCenter.Write(old_fukuisan[j].ToString() + "\r\n");
+            }
+            
             if (TimeStampWriteFlag)
             {
                 DateTime dtnow = DateTime.Now;
