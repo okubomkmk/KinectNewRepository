@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 512;
+        private int RECORD_SIZE = 1024;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -44,7 +44,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private bool TimeStampWriteFlag = true;
         private bool WritingFlag = false;
         private bool NinePointFlag = false;
-        private int WaitForStartingRecord = 3;
+        private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private int distance_fukuisan_horizonal = 1;
         private int distance_fukuisan_vertial = 1;
@@ -382,7 +382,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + i * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
+                    fukuisan[i * 3 + j + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + i * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
                 }
             }
                 //writingSw.Write(ValueTemp.ToString() + "\r\n");
