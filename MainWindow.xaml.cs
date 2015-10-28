@@ -50,6 +50,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private ushort[] old_fukuisan = new ushort[1];
         private int distance_fukuisan_horizonal = 128;
         private int distance_fukuisan_vertial = 104;
+        private System.Windows.Controls.Label[] ValueLabels;
 
         /// <summary>
         /// Active Kinect sensor
@@ -127,6 +128,17 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             this.ButtonWriteDown.IsEnabled = false;
             Array.Resize(ref fukuisan,RECORD_SIZE * 9);
             Array.Resize(ref old_fukuisan, RECORD_SIZE);
+            this.ValueLabels = new System.Windows.Controls.Label[9];
+          
+            this.ValueLabels[0] = this.Label0;
+            this.ValueLabels[1] = this.Label1;
+            this.ValueLabels[2] = this.Label2;
+            this.ValueLabels[3] = this.Label3;
+            this.ValueLabels[4] = this.Label4;
+            this.ValueLabels[5] = this.Label5;
+            this.ValueLabels[6] = this.Label6;
+            this.ValueLabels[7] = this.Label7;
+            this.ValueLabels[8] = this.Label8;
             
         }
 
@@ -390,6 +402,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 {
                     index_value = i * 3 + j;
                     fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
+                    this.ValueLabels[index_value].Content = fukuisan[index_value + writeDownedCounter * 9];
                 }
             }
             old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);

@@ -28,14 +28,16 @@
         <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="437,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" Name="TextSample" Text="16384"/>
         <Label Content="Sample" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="336,162,0,0"/>
         <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="296" Grid.Column="1" Margin="535,100,0,0" Height="71" Name="ButtonWriteDown" Click="ButtonWriteDown_Click" FontSize="50" />
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="390,308,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="513,308,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="636,308,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="390,375,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="513,375,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="47" Margin="636,375,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="390,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="513,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="51" Margin="636,444,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="72"/>
+        
+        
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="58" Margin="385,274,0,0" VerticalAlignment="Top" Width="145" Name="Label0"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="58" Margin="549,274,0,0" VerticalAlignment="Top" Width="131" Name="Label1"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="58" Margin="704,274,0,0" VerticalAlignment="Top" Width="112" Name="Label2"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="60" Margin="385,355,0,0" VerticalAlignment="Top" Width="125" Name="Label3"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="60" Margin="549,355,0,0" VerticalAlignment="Top" Width="111" Name="Label4"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="60" Margin="704,355,0,0" VerticalAlignment="Top" Width="112" Name="Label5"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="61" Margin="385,444,0,0" VerticalAlignment="Top" Width="125" Name="Label6"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="61" Margin="549,444,0,0" VerticalAlignment="Top" Width="111" Name="Label7"/>
+        <Label Content="Label" Grid.Column="1" HorizontalAlignment="Left" Height="61" Margin="704,444,0,0" VerticalAlignment="Top" Width="112" Name="Label8"/>
     </Grid>
 </Window>
