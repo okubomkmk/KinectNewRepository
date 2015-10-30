@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 1024;
+        private int RECORD_SIZE = 4096;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -42,14 +42,14 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
-        private bool TimeStampWriteFlag = true;
+        private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
         private bool NinePointFlag = false;
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
-        private int distance_fukuisan_horizonal = 128;
-        private int distance_fukuisan_vertial = 104;
+        private int distance_fukuisan_horizonal = 10;
+        private int distance_fukuisan_vertial = 10;
         private System.Windows.Controls.Label[] ValueLabels;
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             }
 
             DateTime dtend = DateTime.Now;
-            if (TimeStampWriteFlag)
+            if (IsTimestampNeeded)
             {
                 writingSw.Write("\r\n" + dtend.ToString() + " closed\r\n"); //write time stamp
                 writingCenter.Write("\r\n" + dtend.ToString() + " closed\r\n");
@@ -389,7 +389,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private unsafe void writeToArray(ushort* ProcessData, getPointLocation location)
         {
             int index_value = 0;
-            if (!TimeStampFrag && TimeStampWriteFlag)
+            double pointX;
+            double pointY;
+            if (!TimeStampFrag && IsTimestampNeeded)
             {
                 DateTime dtnow = DateTime.Now;
                 writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
@@ -401,8 +403,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 for (int j = 0; j < 3; j++)
                 {
                     index_value = i * 3 + j;
-                    fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData, location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal, location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial);
-                    this.ValueLabels[index_value].Content = fukuisan[index_value + writeDownedCounter * 9];
+                    pointX = location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal;
+                    pointY = location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial;
+                    fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
+                    
+                    this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * 9]);
                 }
             }
             old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
@@ -427,7 +432,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 writingCenter.Write(old_fukuisan[j].ToString() + "\r\n");
             }
             
-            if (TimeStampWriteFlag)
+            if (IsTimestampNeeded)
             {
                 DateTime dtnow = DateTime.Now;
                 writingSw.Write(dtnow.ToString() + "redord ended\r\n");
@@ -469,12 +474,12 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
         private void CheckNonTimeStamp_Checked(object sender, RoutedEventArgs e)
         {
-            TimeStampWriteFlag = false;
+            IsTimestampNeeded = false;
         }
 
         private void CheckNonTimeStamp_Unchecked(object sender, RoutedEventArgs e)
         {
-            TimeStampWriteFlag = true;
+            IsTimestampNeeded = true;
         }
 
         private void ButtonWriteDown_Click(object sender, RoutedEventArgs e)
