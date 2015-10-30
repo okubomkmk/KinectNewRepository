@@ -39,7 +39,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private Point p = new Point();
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\horizonal.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
@@ -48,8 +48,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
-        private int distance_fukuisan_horizonal = 10;
-        private int distance_fukuisan_vertial = 10;
+        private int distance_fukuisan_horizonal = 1;
+        private int distance_fukuisan_vertial = 1;
+        private int horizonalLength = 4;
         private System.Windows.Controls.Label[] ValueLabels;
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.ButtonWriteDown.IsEnabled = false;
-            Array.Resize(ref fukuisan,RECORD_SIZE * 9);
+            Array.Resize(ref fukuisan,RECORD_SIZE * (2 * horizonalLength + 1));
             Array.Resize(ref old_fukuisan, RECORD_SIZE);
             this.ValueLabels = new System.Windows.Controls.Label[9];
           
@@ -398,17 +399,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 writingCenter.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < horizonalLength * 2 + 1; i++)
             {
-                for (int j = 0; j < 3; j++)
-                {
-                    index_value = i * 3 + j;
-                    pointX = location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal;
-                    pointY = location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial;
-                    fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
+                
+                index_value = i;
+                pointX = location.X + (index_value-horizonalLength) * distance_fukuisan_horizonal;
+                pointY = location.Y;
+                fukuisan[index_value + writeDownedCounter * (horizonalLength * 2 +1)] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
                     
-                    this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * 9]);
-                }
+                this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * (horizonalLength * 2 + 1)]);
+                
             }
             old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
 
