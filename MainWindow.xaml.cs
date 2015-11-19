@@ -39,8 +39,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private Point p = new Point();
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\test.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
-        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\10pointsVersion6.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\110pointsCenterCheckVersion6.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
