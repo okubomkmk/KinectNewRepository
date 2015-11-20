@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 4096;
+        private int NumberOfRecordFrames = 10;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -45,12 +45,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
         private bool NinePointFlag = false;
-        private int WaitForStartingRecord = 1;
+        private int WaitTime = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
-        private int distance_fukuisan_horizonal = 10;
-        private int distance_fukuisan_vertial = 10;
+        private int distance_fukuisan_horizontal = 30;
+        private int distance_fukuisan_vertical = 30;
         private System.Windows.Controls.Label[] ValueLabels;
+        private int HorizontalPixel = 5;
+        private int VerticalPixel = 5;
+
+     
 
         /// <summary>
         /// Active Kinect sensor
@@ -126,8 +130,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.ButtonWriteDown.IsEnabled = false;
-            Array.Resize(ref fukuisan,RECORD_SIZE * 9);
-            Array.Resize(ref old_fukuisan, RECORD_SIZE);
+            Array.Resize(ref fukuisan,NumberOfRecordFrames * HorizontalPixel*VerticalPixel);
+            Array.Resize(ref old_fukuisan, NumberOfRecordFrames);
             this.ValueLabels = new System.Windows.Controls.Label[9];
           
             this.ValueLabels[0] = this.Label0;
@@ -359,7 +363,15 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 }
             }
 
-            this.StatusText = Resolution + CursorLocation + " cursor lock is " + cursol_locked.ToString() + " " + Value.ToString() + " Writing is "  + " Writed sample number =" + writeDownedCounter.ToString();
+            this.StatusText = Resolution 
+                + CursorLocation 
+                + " cursor lock is " 
+                + cursol_locked.ToString() 
+                + " " 
+                + Value.ToString() 
+                + " Writing is "  
+                + " Writed sample number =" 
+                + writeDownedCounter.ToString();
         }
         
         private unsafe ushort shiburinkawaiiyoo(ushort* ProcessData, double X,double Y)
@@ -391,6 +403,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             int index_value = 0;
             double pointX;
             double pointY;
+            int RecordPixel = HorizontalPixel * VerticalPixel;
+
             if (!TimeStampFrag && IsTimestampNeeded)
             {
                 DateTime dtnow = DateTime.Now;
@@ -398,22 +412,22 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 writingCenter.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
             }
             TimeStampFrag = true;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < HorizontalPixel; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < VerticalPixel; j++)
                 {
-                    index_value = i * 3 + j;
-                    pointX = location.X - distance_fukuisan_horizonal + j * distance_fukuisan_horizonal;
-                    pointY = location.Y - distance_fukuisan_vertial + i * distance_fukuisan_vertial;
-                    fukuisan[index_value + writeDownedCounter * 9] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
+                    index_value = i * HorizontalPixel + j;
+                    pointX = location.X - distance_fukuisan_horizontal + j * distance_fukuisan_horizontal;
+                    pointY = location.Y - distance_fukuisan_vertical + i * distance_fukuisan_vertical;
+                    fukuisan[index_value + writeDownedCounter * RecordPixel] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
                     
-                    this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * 9]);
+                    //this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * RecordPixel]);
                 }
             }
-            old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
+            old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
 
             writeDownedCounter++;
-            if (writeDownedCounter == fukuisan.Length / 9)
+            if (writeDownedCounter == fukuisan.Length / RecordPixel)
             {
                 WritingFlag = false;
                 writeToText();
@@ -461,7 +475,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 return mouse;
             }
-            if((0 <= LockPosition.X && LockPosition.X < this.depthFrameDescription.Width) && (0 <= LockPosition.Y && LockPosition.Y < this.depthFrameDescription.Height))
+            if ((0 <= LockPosition.X && LockPosition.X < this.depthFrameDescription.Width) && (0 <= LockPosition.Y && LockPosition.Y < this.depthFrameDescription.Height))
             {
                 return LockPosition;
             }
@@ -496,9 +510,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private void ButtonEdit(object sender, EventArgs e)
         {
             
-            this.ButtonWriteDown.Content = (WaitForStartingRecord).ToString();
-            WaitForStartingRecord--;
-            if (WaitForStartingRecord == -1)
+            this.ButtonWriteDown.Content = (WaitTime).ToString();
+            WaitTime--;
+            if (WaitTime == -1)
             {
                 WritingFlag = true;
             }
