@@ -39,8 +39,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private Point p = new Point();
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\10pointsVersion6.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
-        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\110pointsCenterCheckVersion6.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\location.dat", false, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\locationCenterCheckVersion.dat", false, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
@@ -50,9 +50,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private ushort[] old_fukuisan = new ushort[1];
         private int distance_fukuisan_horizontal = 30;
         private int distance_fukuisan_vertical = 30;
-        private System.Windows.Controls.Label[] ValueLabels;
-        private int HorizontalPixel = 5;
-        private int VerticalPixel = 5;
+        private System.Windows.Controls.Label ValueLabels;
+        private int HorizontalPixel = 11; // odd
+        private int VerticalPixel = 11; //odd
 
      
 
@@ -132,17 +132,9 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             this.ButtonWriteDown.IsEnabled = false;
             Array.Resize(ref fukuisan,NumberOfRecordFrames * HorizontalPixel*VerticalPixel);
             Array.Resize(ref old_fukuisan, NumberOfRecordFrames);
-            this.ValueLabels = new System.Windows.Controls.Label[9];
-          
-            this.ValueLabels[0] = this.Label0;
-            this.ValueLabels[1] = this.Label1;
-            this.ValueLabels[2] = this.Label2;
-            this.ValueLabels[3] = this.Label3;
-            this.ValueLabels[4] = this.Label4;
-            this.ValueLabels[5] = this.Label5;
-            this.ValueLabels[6] = this.Label6;
-            this.ValueLabels[7] = this.Label7;
-            this.ValueLabels[8] = this.Label8;
+            this.ValueLabels = new System.Windows.Controls.Label();
+            this.ValueLabels = this.Label0;
+
             
         }
 
@@ -333,8 +325,6 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 {
                     writeToArray(ProcessData, mouseInPicture);
                 }
-                    
-
 
                 else
                 {
@@ -417,13 +407,16 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 for (int j = 0; j < VerticalPixel; j++)
                 {
                     index_value = i * HorizontalPixel + j;
-                    pointX = location.X - distance_fukuisan_horizontal + j * distance_fukuisan_horizontal;
-                    pointY = location.Y - distance_fukuisan_vertical + i * distance_fukuisan_vertical;
+                    pointX = location.X - distance_fukuisan_horizontal * (int)(HorizontalPixel /2) + j * distance_fukuisan_horizontal;
+                    pointY = location.Y - distance_fukuisan_vertical * (int)(VerticalPixel / 2) + i * distance_fukuisan_vertical;
                     fukuisan[index_value + writeDownedCounter * RecordPixel] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
                     
-                    //this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * RecordPixel]);
+                    //this.ValueLabels.Content += pointX.ToString() + " " + pointY.ToString() + " " + (fukuisan[index_value + writeDownedCounter * RecordPixel]) + " ";
                 }
+                //this.ValueLabels.Content += "\r\n";
             }
+            //this.ValueLabels.Content = "";
+
             old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
 
             writeDownedCounter++;

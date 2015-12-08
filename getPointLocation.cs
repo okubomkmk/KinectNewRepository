@@ -24,7 +24,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         public getPointLocation(Point p)
         {
             X = System.Windows.Forms.Control.MousePosition.X - p.X;
-            Y = System.Windows.Forms.Control.MousePosition.Y - p.Y - 1;            
+            Y = System.Windows.Forms.Control.MousePosition.Y - p.Y;            
         }
         public getPointLocation()
         {
