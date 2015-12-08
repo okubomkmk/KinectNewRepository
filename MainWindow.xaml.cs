@@ -320,7 +320,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             if (cursol_locked)
             {
                 
-                this.StatusText = mouseClickedPosition.X + " " + mouseClickedPosition.Y +" "+ " Writing is " + " Writed sample number =" + writeDownedCounter.ToString();
+                this.StatusText = mouseClickedPosition.X + " " + mouseClickedPosition.Y +" "+shiburinkawaiiyoo(ProcessData,mouseClickedPosition.X,mouseClickedPosition.Y)+ " Writing is " +WritingFlag+ " Writed sample number =" + writeDownedCounter.ToString();
             }
             else
             {
