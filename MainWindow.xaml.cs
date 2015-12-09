@@ -31,15 +31,15 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 100;
+        private int RECORD_SIZE = 800;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private bool cursol_locked = true;
         private Point p = new Point();
         private Point targetPosition = new Point();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\horizonal.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
-        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\hogehoge.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheckhogehoge.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
