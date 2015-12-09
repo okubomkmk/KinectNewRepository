@@ -34,7 +34,6 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private int RECORD_SIZE = 4096;
         private int counter = 0;
         private int writeDownedCounter = 0;
-        private int fps_graph = 1;
         private bool cursol_locked = true;
         private Point p = new Point();
         private getPointLocation mouse = new getPointLocation();
@@ -45,7 +44,6 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
-        private bool NinePointFlag = false;
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
@@ -337,16 +335,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             return ProcessData[(int)(location.Y * this.depthFrameDescription.Width + location.X)];
         }
 
- 
-        private void Viewbox1_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            mouseClickedPosition = e.GetPosition(Viewbox1);
-            cursol_locked = !cursol_locked;
-            this.ButtonWriteDown.IsEnabled = cursol_locked;
-            
-        }
-
-        private unsafe void writeToArray(ushort* ProcessData, getPointLocation location)
+        private unsafe void writeToArray(ushort* ProcessData, Point location)
         {
             int index_value = 0;
             double pointX;
@@ -399,17 +388,21 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             }
 
         }
-        private getPointLocation getLockPosition()
+        private Point getLockPosition()
         {
             double temp;
-            getPointLocation LockPosition = new getPointLocation();
+            Point LockPosition = new Point();
+            Point InvalidNum = new Point();
+            InvalidNum.X = 256;
+            InvalidNum.Y = 212;
+
             if (double.TryParse(this.textXlock.Text, out temp))
             {
                 LockPosition.X = temp;
             }
             else
             {
-                return mouse;
+                return InvalidNum;
             }
 
             if (double.TryParse(this.textYlock.Text, out temp))
@@ -418,7 +411,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             }
             else
             {
-                return mouse;
+                return InvalidNum;
             }
             if((0 <= LockPosition.X && LockPosition.X < this.depthFrameDescription.Width) && (0 <= LockPosition.Y && LockPosition.Y < this.depthFrameDescription.Height))
             {
@@ -426,7 +419,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             }
             else
             {
-                return mouse;
+                return InvalidNum;
             }
             
         }
