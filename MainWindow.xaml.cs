@@ -31,25 +31,24 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 4096;
+        private int RECORD_SIZE = 100;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private bool cursol_locked = true;
         private Point p = new Point();
-        private getPointLocation mouse = new getPointLocation();
-        private Point mouseClickedPosition = new Point();
+        private Point targetPosition = new Point();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\horizonal.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\CenterCheck.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
+        private bool ArrayResized = false;
         private int WaitForStartingRecord = 1;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
         private int distance_fukuisan_horizonal = 1;
         private int distance_fukuisan_vertial = 1;
-        private int horizonalLength = 4;
         private System.Windows.Controls.Label[] ValueLabels;
 
         /// <summary>
@@ -126,8 +125,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             // initialize the components (controls) of the window
             this.InitializeComponent();
             this.ButtonWriteDown.IsEnabled = false;
-            Array.Resize(ref fukuisan,RECORD_SIZE * (2 * horizonalLength + 1));
-            Array.Resize(ref old_fukuisan, RECORD_SIZE);
+
             this.ValueLabels = new System.Windows.Controls.Label[9];
           
             this.ValueLabels[0] = this.Label0;
@@ -315,14 +313,38 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
         private unsafe void TextGenerate(ushort* ProcessData)
         {
+            int VerticalCheckDistance = 15;
+            int HorizontalCheckDistance = 15;
+            Point roop = new Point();
             if (cursol_locked)
             {
-                
-                this.StatusText = mouseClickedPosition.X + " " + mouseClickedPosition.Y +" "+shiburinkawaiiyoo(ProcessData,mouseClickedPosition.X,mouseClickedPosition.Y)+ " Writing is " +WritingFlag+ " Writed sample number =" + writeDownedCounter.ToString();
+                if (WritingFlag)
+                {
+                    writeToArray(ProcessData, getLockPosition());
+                }
+
+                else
+                {
+                    TimeStampFrag = false;
+                }
+                targetPosition = getLockPosition();
+                if(targetPosition.X==256 && targetPosition.Y == 212 && !WritingFlag)
+                {
+                    for (int indexValueX = -1; indexValueX < 2; indexValueX++)
+                    {
+                        for (int indexValueY = -1; indexValueY < 2; indexValueY++)
+                        {
+                            roop.X = targetPosition.X + HorizontalCheckDistance * indexValueX;
+                            roop.Y = targetPosition.Y + VerticalCheckDistance * indexValueY;
+                            this.ValueLabels[(indexValueX+1)+3*(indexValueY+1)].Content = roop.ToString()+ "\r\n" + shiburinkawaiiyoo(ProcessData, roop);
+                        }
+                    }
+                }
+                this.StatusText = targetPosition.X + " " + targetPosition.Y +" "+shiburinkawaiiyoo(ProcessData,targetPosition.X,targetPosition.Y)+ " Writing is " +WritingFlag+ " Writed sample number =" + writeDownedCounter.ToString();
             }
             else
             {
-                this.statusText = "unlocked";
+                this.StatusText = "unlocked";
             }
         }
         
@@ -330,22 +352,23 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         {
             return ProcessData[(int)(Y * this.depthFrameDescription.Width + X)];
         }
-        private unsafe ushort shiburinkawaiiyoo(ushort* ProcessData, getPointLocation location)
+        private unsafe ushort shiburinkawaiiyoo(ushort* ProcessData, Point location)
         {
             return ProcessData[(int)(location.Y * this.depthFrameDescription.Width + location.X)];
         }
 
         private unsafe void writeToArray(ushort* ProcessData, Point location)
         {
+            int horizonalLength = 3;
+            if (!ArrayResized)
+            {
+                Array.Resize(ref fukuisan, RECORD_SIZE * (2 * horizonalLength + 1));
+                Array.Resize(ref old_fukuisan, RECORD_SIZE);
+            }
             int index_value = 0;
             double pointX;
             double pointY;
-            if (!TimeStampFrag && IsTimestampNeeded)
-            {
-                DateTime dtnow = DateTime.Now;
-                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
-                writingCenter.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
-            }
+            
             TimeStampFrag = true;
             for (int i = 0; i < horizonalLength * 2 + 1; i++)
             {
@@ -354,9 +377,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 pointX = location.X + (index_value-horizonalLength) * distance_fukuisan_horizonal;
                 pointY = location.Y;
                 fukuisan[index_value + writeDownedCounter * (horizonalLength * 2 +1)] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
-                    
-                this.ValueLabels[index_value].Content = pointX.ToString() + " " + pointY.ToString() + "\r\n" + (fukuisan[index_value + writeDownedCounter * (horizonalLength * 2 + 1)]);
-                
+                                    
             }
             old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
 
@@ -436,13 +457,18 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
         private void ButtonWriteDown_Click(object sender, RoutedEventArgs e)
         {
+            if (!TimeStampFrag && IsTimestampNeeded)
+            {
+                DateTime dtnow = DateTime.Now;
+                writingSw.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
+                writingCenter.Write("\nwriting start\n" + dtnow.ToString() + "\r\n"); //time stamp
+            }
             DispatcherTimer  ButtonEditorTimer = new DispatcherTimer(DispatcherPriority.Normal);
             ButtonEditorTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
             ButtonEditorTimer.Tick += new EventHandler(ButtonEdit);
             ButtonEditorTimer.Start();
             writeDownedCounter = 0;
             ButtonWriteDown.IsEnabled = false;
-            
         }
 
         private void ButtonEdit(object sender, EventArgs e)
@@ -455,5 +481,20 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 WritingFlag = true;
             }
         }
+
+        private void CheckLockCenter_Checked(object sender, RoutedEventArgs e)
+        {
+            cursol_locked = true;
+            this.ButtonWriteDown.IsEnabled = true;
+        }
+
+        private void CheckLockCenter_Unchecked(object sender, RoutedEventArgs e)
+        {
+            cursol_locked = false;
+            this.ButtonWriteDown.IsEnabled = false;
+        }
+
+
+ 
     }
 }
