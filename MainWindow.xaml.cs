@@ -37,6 +37,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private int fps_graph = 1;
         private bool cursol_locked = true;
         private Point p = new Point();
+        private Point mouseClickdePosition = new Point();
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
         private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\location.dat", false, System.Text.Encoding.GetEncoding("shift_jis"));
@@ -330,7 +331,8 @@ namespace Microsoft.Samples.Kinect.DepthBasics
                 {
                     TimeStampFrag = false;
                 }
-                CursorLocation = " Cursor Location " + (mouseInPicture.X.ToString() + " " + mouseInPicture.Y.ToString());
+                CursorLocation = " Cursor Location " + mouseInPicture.X.ToString() + " " + mouseInPicture.Y.ToString() + "new version" + mouseClickdePosition.X + " "+mouseClickdePosition.Y;
+            
                 Value = shiburinkawaiiyoo(ProcessData, mouseInPicture);
                   
             }
@@ -386,6 +388,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             cursol_locked = !cursol_locked;
 
             this.ButtonWriteDown.IsEnabled = cursol_locked;
+            mouseClickdePosition = e.GetPosition(Viewbox1);
         }
 
         private unsafe void writeToArray(ushort* ProcessData, getPointLocation location)
