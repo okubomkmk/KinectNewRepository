@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int RECORD_SIZE = 800;
+        private int RECORD_SIZE = 100;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private bool cursol_locked = true;
@@ -320,7 +320,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 if (WritingFlag)
                 {
-                    writeToArray(ProcessData, getLockPosition());
+                    writeToArrayHorizontalPixels(ProcessData, getLockPosition());
                 }
 
                 else
@@ -357,38 +357,6 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             return ProcessData[(int)(location.Y * this.depthFrameDescription.Width + location.X)];
         }
 
-        private unsafe void writeToArray(ushort* ProcessData, Point location)
-        {
-            int horizonalLength = 3;
-            if (!ArrayResized)
-            {
-                Array.Resize(ref fukuisan, RECORD_SIZE * (2 * horizonalLength + 1));
-                Array.Resize(ref old_fukuisan, RECORD_SIZE);
-            }
-            int index_value = 0;
-            double pointX;
-            double pointY;
-            
-            TimeStampFrag = true;
-            for (int i = 0; i < horizonalLength * 2 + 1; i++)
-            {
-                
-                index_value = i;
-                pointX = location.X + (index_value-horizonalLength) * distance_fukuisan_horizonal;
-                pointY = location.Y;
-                fukuisan[index_value + writeDownedCounter * (horizonalLength * 2 +1)] = shiburinkawaiiyoo(ProcessData,pointX , pointY);
-                                    
-            }
-            old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X,location.Y);
-
-            writeDownedCounter++;
-            if (writeDownedCounter == fukuisan.Length / 9)
-            {
-                WritingFlag = false;
-                writeToText();
-                ButtonWriteDown.IsEnabled = true;
-            }
-        }
 
         private void writeToText()
         {
@@ -494,7 +462,46 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             this.ButtonWriteDown.IsEnabled = false;
         }
 
+        private unsafe void writeToArrayHorizontalPixels(ushort* ProcessData, Point location)
+        {
+            int horizonalLength = 3;
+            if (!ArrayResized)
+            {
+                Array.Resize(ref fukuisan, RECORD_SIZE * (2 * horizonalLength + 1));
+                Array.Resize(ref old_fukuisan, RECORD_SIZE);
+            }
+            int index_value = 0;
+            double pointX;
+            double pointY;
+
+            TimeStampFrag = true;
+            for (int i = 0; i < horizonalLength * 2 + 1; i++)
+            {
+
+                index_value = i;
+                pointX = location.X + (index_value - horizonalLength) * distance_fukuisan_horizonal;
+                pointY = location.Y;
+                fukuisan[index_value + writeDownedCounter * (horizonalLength * 2 + 1)] = shiburinkawaiiyoo(ProcessData, pointX, pointY);
+
+            }
+            old_fukuisan[writeDownedCounter] = shiburinkawaiiyoo(ProcessData, location.X, location.Y);
+
+            writeDownedCounter++;
+            if (writeDownedCounter == fukuisan.Length / 7)
+            {
+                WritingFlag = false;
+                writeToText();
+                ButtonWriteDown.IsEnabled = true;
+            }
+        }
+
+
+
+
+
 
  
     }
 }
+
+
