@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         /// Map depth range to byte range
         /// </summary>
         private const int MapDepthToByte = 8000 / 256;
-        private int NumberOfRecordFrames = 10;
+        private int NumberOfRecordFrames = 100;
         private int counter = 0;
         private int writeDownedCounter = 0;
         private int fps_graph = 1;
@@ -39,17 +39,17 @@ namespace Microsoft.Samples.Kinect.DepthBasics
         private Point p = new Point();
         private getPointLocation mouse = new getPointLocation();
         private List<KeyValuePair<string, ushort>> MyTimeValue = new List<KeyValuePair<string, ushort>>();
-        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\10pointsVersion6.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
-        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\110pointsCenterCheckVersion6.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingSw = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\kokyuu.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
+        private System.IO.StreamWriter writingCenter = new System.IO.StreamWriter(@"C:\Users\mkuser\Documents\centerkokyuu.dat", true, System.Text.Encoding.GetEncoding("shift_jis"));
         private bool TimeStampFrag = false;
         private bool IsTimestampNeeded = true;
         private bool WritingFlag = false;
         private bool NinePointFlag = false;
-        private int WaitTime = 1;
+        private int WaitTime = 5;
         private ushort[] fukuisan = new ushort[1];
         private ushort[] old_fukuisan = new ushort[1];
-        private int distance_fukuisan_horizontal = 30;
-        private int distance_fukuisan_vertical = 30;
+        private int distance_fukuisan_horizontal = 3;
+        private int distance_fukuisan_vertical = 3;
         private System.Windows.Controls.Label[] ValueLabels;
         private int HorizontalPixel = 5;
         private int VerticalPixel = 5;
